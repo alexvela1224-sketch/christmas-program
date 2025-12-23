@@ -85,13 +85,13 @@ const Player = ({
         <div className="glass-panel floating-player">
             <div className="player-info" style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1 }}>
                 {currentTrack && (
-                    <img src={currentTrack.cover} className="mobile-hide" style={{ width: '48px', height: '48px', borderRadius: '12px' }} />
+                    <img src={currentTrack.cover} style={{ width: '48px', height: '48px', borderRadius: '12px' }} />
                 )}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                     <span className="player-title" style={{ fontSize: '14px', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '180px' }}>
                         {currentTrack?.title}
                     </span>
-                    <span className="player-artist mobile-hide" style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{currentTrack?.artist}</span>
+                    <span className="player-artist" style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{currentTrack?.artist}</span>
                 </div>
             </div>
 
@@ -119,7 +119,7 @@ const Player = ({
                 </div>
 
                 <div className="progress-container" style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <span className="mobile-hide" style={{ fontSize: '11px', color: 'var(--text-muted)', width: '32px', textAlign: 'right' }}>{formatTime(currentTime)}</span>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)', width: '32px', textAlign: 'right' }}>{formatTime(currentTime)}</span>
                     <div
                         ref={progressBarRef}
                         onMouseDown={handleProgressClick}
@@ -129,11 +129,9 @@ const Player = ({
                             onSeek(progress * duration);
                             setIsDraggingProgress(true);
                         }}
-                        className="mobile-hide-bar"
                         style={{ flex: 1, height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', position: 'relative', cursor: 'pointer' }}
                     >
                         <div style={{ width: `${progressPercent}%`, height: '100%', background: 'white', borderRadius: '2px' }} />
-                        {/* Draggable handle handle */}
                         <div style={{
                             position: 'absolute',
                             left: `${progressPercent}%`,
@@ -151,7 +149,7 @@ const Player = ({
                 </div>
             </div>
 
-            <div className="volume-control mobile-hide" style={{ display: 'flex', justifyContent: 'flex-end', gap: '16px', flex: 1, color: 'var(--text-muted)' }}>
+            <div className="volume-control" style={{ display: 'flex', justifyContent: 'flex-end', gap: '16px', flex: 1, color: 'var(--text-muted)' }}>
                 <Volume2 size={20} />
                 <div
                     ref={volumeBarRef}
