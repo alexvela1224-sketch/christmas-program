@@ -150,124 +150,120 @@ body {
   nav {
     margin-bottom: 30px !important;
     position: relative;
-    z-index: 10;
+    z-index: 100;
   }
 
   .hero-section {
     margin-bottom: 40px;
+    display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 32px;
-    padding-top: 40px;
+    gap: 40px;
+    /* Increased gap to ensure no overlap */
+    padding-top: 60px;
+    /* More space from top */
     position: relative;
   }
 
   .album-art-wrapper {
-    width: 160px;
-    height: 160px;
+    width: 200px;
+    /* Bigger restricted size but still safe */
+    height: 200px;
     margin: 0 auto;
     flex-shrink: 0;
     position: relative;
     z-index: 5;
   }
 
+  .album-art-main {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .album-art-glow {
+    display: none;
+    /* Hide glow on mobile to avoid overlap confusion */
+  }
+
   .hero-section h1 {
-    font-size: 24px !important;
-    margin: 10px 0 !important;
+    font-size: 28px !important;
+    margin: 15px 0 5px 0 !important;
     line-height: 1.2;
-    position: relative;
-    z-index: 5;
+    font-weight: 800;
   }
 
   .hero-section p {
-    font-size: 13px !important;
-    margin-bottom: 24px !important;
-    padding: 0 10px;
+    font-size: 14px !important;
+    margin-bottom: 30px !important;
+    padding: 0 15px;
+    color: var(--text-muted);
   }
 
+  /* Floating Player - Compact Mobile Version */
   .floating-player {
-    bottom: 20px;
+    bottom: 25px;
     left: 50%;
     transform: translateX(-50%);
-    width: 94%;
-    max-width: 440px;
-    padding: 12px 12px;
+    width: 90%;
+    max-width: 400px;
+    padding: 15px;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     height: auto;
-    border-radius: 20px;
-  }
-
-  /* Hide pill art on mobile */
-  .player-info img {
-    display: none !important;
+    border-radius: 25px;
+    background: rgba(15, 23, 42, 0.85);
+    /* Slightly darker for better contrast */
   }
 
   .player-info {
     width: 100%;
     justify-content: center !important;
-    /* border-bottom: none !important; */
-    /* padding-bottom: 0 !important; */
-    margin-bottom: 4px !important;
-    padding-right: 40px;
+    margin-bottom: 5px !important;
+  }
+
+  .player-info img {
+    display: none !important;
+    /* Remove album art icon from pill on mobile */
   }
 
   .player-title {
-    font-size: 13px !important;
+    font-size: 14px !important;
     text-align: center !important;
-    max-width: 180px !important;
+    max-width: 100% !important;
     margin: 0 auto;
+    display: block !important;
   }
 
   .player-artist {
     display: none !important;
-    /* Hide artist in pill on mobile as requested */
+    /* Hide artist in pill on mobile */
   }
 
   .player-controls-wrapper {
     width: 100%;
-    max-width: 240px;
+    max-width: 100% !important;
     margin: 0 auto;
-    gap: 4px !important;
+    gap: 8px !important;
   }
 
   .progress-container {
     width: 100%;
-    gap: 8px !important;
-  }
-
-  /* Move volume to the side - use a row container for controls + volume if possible, 
-       but easier to adjust the flex parent */
-  .volume-control {
     display: flex !important;
-    width: auto !important;
-    justify-content: center !important;
-    /* margin-top: 4px; */
-    /* border-top: none !important; */
-    /* padding-top: 0 !important; */
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    gap: 4px !important;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 6px;
-    border-radius: 12px;
+    align-items: center;
+    gap: 10px !important;
   }
 
-  .volume-control>div {
-    width: 30px !important;
-    /* Tiny volume bar */
-  }
-
-  .volume-control svg {
-    width: 14px !important;
-    height: 14px !important;
+  /* Remove volume control entirely on mobile as requested */
+  .volume-control {
+    display: none !important;
   }
 
   .track-row {
-    padding: 8px 12px;
+    padding: 10px 15px;
   }
 }
 
