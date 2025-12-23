@@ -145,7 +145,6 @@ body {
   .app-wrapper {
     padding: 20px;
     padding-bottom: 200px;
-    /* Extra padding for floating player */
   }
 
   nav {
@@ -177,26 +176,52 @@ body {
   }
 
   .floating-player {
-    bottom: 20px;
+    bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
-    width: calc(100% - 40px);
-    max-width: 350px;
-    padding: 16px;
-    gap: 12px;
+    width: 90%;
+    max-width: 380px;
+    padding: 12px 16px;
     flex-direction: column;
+    gap: 8px;
     height: auto;
-    border-radius: 24px;
+    border-radius: 30px;
   }
 
-  .floating-player>div:first-child {
+  .mobile-hide {
+    display: none !important;
+  }
+
+  .mobile-hide-bar {
+    display: none !important;
+  }
+
+  .player-info {
     width: 100%;
-    justify-content: center;
+    justify-content: center !important;
+    margin-bottom: 4px;
   }
 
-  .floating-player>div:last-child {
-    display: none;
-    /* Hide volume on mobile to save space */
+  .player-title {
+    font-size: 13px !important;
+    max-width: 250px !important;
+    text-align: center;
+  }
+
+  .player-controls-wrapper {
+    width: 100%;
+    gap: 4px !important;
+  }
+
+  .progress-container {
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+
+  .player-duration {
+    font-size: 10px !important;
+    text-align: center !important;
+    width: auto !important;
   }
 
   .track-row {
