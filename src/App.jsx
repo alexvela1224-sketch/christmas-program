@@ -145,7 +145,7 @@ function App() {
             transition={{ delay: 0.2 }}
             style={{ textAlign: 'center' }}
           >
-            <h1 style={{ fontSize: '48px', fontWeight: '900', marginBottom: '8px' }}>Christmas Program 2025</h1>
+            <h1 style={{ fontSize: '48px', fontWeight: '900', marginBottom: '8px' }}>Mid Valley Assembly</h1>
             <p style={{ color: 'var(--text-muted)', fontSize: '18px', maxWidth: '600px', margin: '0 auto 32px auto' }}>
               A collection of heartfelt performances and mastered recordings from our annual Christmas celebration.
             </p>
