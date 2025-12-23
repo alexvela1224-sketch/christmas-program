@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, SkipBack, SkipForward, Volume2, Shuffle, Repeat } from 'lucide-react';
 
 const Player = ({
@@ -13,6 +13,11 @@ const Player = ({
     onSeek,
     onVolumeChange
 }) => {
+    const [isDraggingProgress, setIsDraggingProgress] = useState(false);
+    const [isDraggingVolume, setIsDraggingVolume] = useState(false);
+    const progressBarRef = useRef(null);
+    const volumeBarRef = useRef(null);
+
     const formatTime = (time) => {
         if (isNaN(time)) return "0:00";
         const mins = Math.floor(time / 60);
@@ -20,18 +25,58 @@ const Player = ({
         return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     };
 
-    const handleSeek = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const clickedProgress = x / rect.width;
-        onSeek(clickedProgress * duration);
+    const calculateProgress = (clientX, rect) => {
+        const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+        return x / rect.width;
+    };
+
+    const handleProgressMove = (e) => {
+        if (!isDraggingProgress || !progressBarRef.current) return;
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const progress = calculateProgress(clientX, progressBarRef.current.getBoundingClientRect());
+        onSeek(progress * duration);
+    };
+
+    const handleVolumeMove = (e) => {
+        if (!isDraggingVolume || !volumeBarRef.current) return;
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const progress = calculateProgress(clientX, volumeBarRef.current.getBoundingClientRect());
+        onVolumeChange(Math.max(0, Math.min(1, progress)));
+    };
+
+    useEffect(() => {
+        const handleUp = () => {
+            setIsDraggingProgress(false);
+            setIsDraggingVolume(false);
+        };
+
+        if (isDraggingProgress || isDraggingVolume) {
+            window.addEventListener('mousemove', isDraggingProgress ? handleProgressMove : handleVolumeMove);
+            window.addEventListener('mouseup', handleUp);
+            window.addEventListener('touchmove', isDraggingProgress ? handleProgressMove : handleVolumeMove);
+            window.addEventListener('touchend', handleUp);
+        }
+
+        return () => {
+            window.removeEventListener('mousemove', isDraggingProgress ? handleProgressMove : handleVolumeMove);
+            window.removeEventListener('mouseup', handleUp);
+            window.removeEventListener('touchmove', isDraggingProgress ? handleProgressMove : handleVolumeMove);
+            window.removeEventListener('touchend', handleUp);
+        };
+    }, [isDraggingProgress, isDraggingVolume, duration]);
+
+    const handleProgressClick = (e) => {
+        const rect = progressBarRef.current.getBoundingClientRect();
+        const progress = calculateProgress(e.clientX, rect);
+        onSeek(progress * duration);
+        setIsDraggingProgress(true);
     };
 
     const handleVolumeClick = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const newVolume = Math.max(0, Math.min(1, x / rect.width));
-        onVolumeChange(newVolume);
+        const rect = volumeBarRef.current.getBoundingClientRect();
+        const progress = calculateProgress(e.clientX, rect);
+        onVolumeChange(progress);
+        setIsDraggingVolume(true);
     };
 
     const progressPercent = duration ? (currentTime / duration) * 100 : 0;
@@ -76,22 +121,61 @@ const Player = ({
                 <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <span style={{ fontSize: '11px', color: 'var(--text-muted)', width: '32px', textAlign: 'right' }}>{formatTime(currentTime)}</span>
                     <div
-                        onClick={handleSeek}
+                        ref={progressBarRef}
+                        onMouseDown={handleProgressClick}
+                        onTouchStart={(e) => {
+                            const rect = progressBarRef.current.getBoundingClientRect();
+                            const progress = calculateProgress(e.touches[0].clientX, rect);
+                            onSeek(progress * duration);
+                            setIsDraggingProgress(true);
+                        }}
                         style={{ flex: 1, height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', position: 'relative', cursor: 'pointer' }}
                     >
                         <div style={{ width: `${progressPercent}%`, height: '100%', background: 'white', borderRadius: '2px' }} />
+                        {/* Draggable handle handle */}
+                        <div style={{
+                            position: 'absolute',
+                            left: `${progressPercent}%`,
+                            top: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '12px',
+                            height: '12px',
+                            background: 'white',
+                            borderRadius: '50%',
+                            boxShadow: '0 0 10px rgba(0,0,0,0.5)',
+                            display: isDraggingProgress ? 'block' : 'none'
+                        }} />
                     </div>
                     <span style={{ fontSize: '11px', color: 'var(--text-muted)', width: '32px' }}>{formatTime(duration)}</span>
                 </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '16px', flex: 1, color: 'var(--text-muted)' }}>
+            <div className="volume-control" style={{ display: 'flex', justifyContent: 'flex-end', gap: '16px', flex: 1, color: 'var(--text-muted)' }}>
                 <Volume2 size={20} />
                 <div
-                    onClick={handleVolumeClick}
-                    style={{ width: '80px', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', marginTop: '8px', cursor: 'pointer' }}
+                    ref={volumeBarRef}
+                    onMouseDown={handleVolumeClick}
+                    onTouchStart={(e) => {
+                        const rect = volumeBarRef.current.getBoundingClientRect();
+                        const progress = calculateProgress(e.touches[0].clientX, rect);
+                        onVolumeChange(progress);
+                        setIsDraggingVolume(true);
+                    }}
+                    style={{ width: '80px', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', marginTop: '8px', cursor: 'pointer', position: 'relative' }}
                 >
                     <div style={{ width: `${volume * 100}%`, height: '100%', background: 'white', borderRadius: '2px' }} />
+                    <div style={{
+                        position: 'absolute',
+                        left: `${volume * 100}%`,
+                        top: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '12px',
+                        height: '12px',
+                        background: 'white',
+                        borderRadius: '50%',
+                        boxShadow: '0 0 10px rgba(0,0,0,0.5)',
+                        display: isDraggingVolume ? 'block' : 'none'
+                    }} />
                 </div>
             </div>
         </div>
